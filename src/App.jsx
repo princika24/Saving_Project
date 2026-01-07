@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "./components/Header";
 import AddGoalModal from "./components/AddGoalModal";
+import GoalCard from "./components/GoalCard";
 import "./App.css";
 
 function App() {
@@ -30,6 +31,13 @@ function App() {
             <button className="add-goal-btn" onClick={handleOpenAddGoalModal}>
               + Add Goal
             </button>
+          </div>
+          <div className="goals-grid">
+            {goals.length === 0 ? (
+              <p>No goals yet. Add your first goal.</p>
+            ) : (
+              goals.map((goal) => <GoalCard key={goal.id} goal={goal} />)
+            )}
           </div>
         </section>
       </main>
