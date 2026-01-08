@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
-import { validateContributionAmount, validateDate } from "../utils";
+import {
+  validateContributionAmount,
+  validateDate,
+  formatCurrency,
+} from "../utils";
 import "./AddContributionModal.css";
 
 function AddContributionModal({ isOpen, onClose, onAddContribution, goal }) {
@@ -60,7 +64,8 @@ function AddContributionModal({ isOpen, onClose, onAddContribution, goal }) {
     const newContribution = {
       id: Date.now().toString(36) + Math.random().toString(36).substr(2),
       amount: parseFloat(amount),
-      date,
+      date: date,
+      createdAt: new Date().toISOString(),
     };
 
     onAddContribution(goal.id, newContribution);
@@ -84,6 +89,14 @@ function AddContributionModal({ isOpen, onClose, onAddContribution, goal }) {
     if (e.target === e.currentTarget) handleClose();
   };
 
+  const currentSaved =
+    goal.contributions?.reduce((sum, contribution) => {
+      return sum + (contribution.amount || 0);
+    }, 0) || 0;
+
+  const newTotal = currentSaved + (parseFloat(amount) || 0);
+  const willExceedTarget = newTotal > goal.targetAmount;
+
   return (
     <div className="modal-overlay" onClick={handleBackdropClick}>
       <div className="modal-content">
@@ -96,6 +109,12 @@ function AddContributionModal({ isOpen, onClose, onAddContribution, goal }) {
 
         <div className="contribution-goal-info">
           <p className="contribution-goal-name">Goal: {goal.name}</p>
+          <p className="contribution-goal-target">
+            Target: {formatCurrency(goal.targetAmount, goal.currency)}
+          </p>
+          <p className="contribution-goal-saved">
+            Currently saved: {formatCurrency(currentSaved, goal.currency)}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="contribution-form">
@@ -113,9 +132,15 @@ function AddContributionModal({ isOpen, onClose, onAddContribution, goal }) {
               onChange={handleAmountChange}
               placeholder="Enter amount"
               min="0"
-              step="0.01"
+              step="1"
             />
             {errors.amount && <div className="form-error">{errors.amount}</div>}
+            {willExceedTarget && amount && !errors.amount && (
+              <div className="form-warning">
+                This will exceed the target by{" "}
+                {formatCurrency(newTotal - goal.targetAmount, goal.currency)}
+              </div>
+            )}
           </div>
 
           <div className="form-group">

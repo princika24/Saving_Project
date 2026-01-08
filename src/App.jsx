@@ -3,6 +3,8 @@ import Header from "./components/Header";
 import AddGoalModal from "./components/AddGoalModal";
 import GoalCard from "./components/GoalCard";
 import AddContributionModal from "./components/AddContributionModal";
+import FinancialOverview from "./components/FinancialOverview";
+import useExchangeRate from "./hooks/useExchangeRate";
 import "./App.css";
 
 const STORAGE_KEY = "savings_planner_goals";
@@ -22,6 +24,14 @@ function App() {
   const [isAddContributionModalOpen, setIsAddContributionModalOpen] =
     useState(false);
   const [selectedGoalId, setSelectedGoalId] = useState(null);
+
+  const {
+    rate: exchangeRate,
+    isLoading: isRateLoading,
+    error: rateError,
+    refreshRate,
+    formatLastUpdated,
+  } = useExchangeRate();
 
   useEffect(() => {
     try {
@@ -67,12 +77,20 @@ function App() {
     );
   };
 
-  const selectedGoal = goals.find((g) => g.id === selectedGoalId);
+  const selectedGoal = goals.find((goal) => goal.id === selectedGoalId);
 
   return (
     <div className="app">
       <Header />
       <main className="main-content">
+        <FinancialOverview
+          goals={goals}
+          exchangeRate={exchangeRate}
+          isRateLoading={isRateLoading}
+          rateError={rateError}
+          refreshRate={refreshRate}
+          formatLastUpdated={formatLastUpdated}
+        />
         <section className="goals-section">
           <div className="goals-section-header">
             <h2 className="goals-section-title">Your Goals</h2>

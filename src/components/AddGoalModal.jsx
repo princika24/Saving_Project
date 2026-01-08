@@ -2,7 +2,6 @@ import { useState } from "react";
 import { validateGoalName, validateTargetAmount } from "../utils";
 import "./AddGoalModal.css";
 
-// AddGoalModal
 function AddGoalModal({ isOpen, onClose, onAddGoal }) {
   const [name, setName] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
@@ -17,7 +16,6 @@ function AddGoalModal({ isOpen, onClose, onAddGoal }) {
     return null;
   }
 
-  // Handle form input changes
   const handleNameChange = (e) => {
     const value = e.target.value;
     setName(value);
@@ -38,7 +36,6 @@ function AddGoalModal({ isOpen, onClose, onAddGoal }) {
     setCurrency(e.target.value);
   };
 
-  // Validate the entire form
   const validateForm = () => {
     const nameError = validateGoalName(name);
     const amountError = validateTargetAmount(targetAmount);
@@ -56,14 +53,12 @@ function AddGoalModal({ isOpen, onClose, onAddGoal }) {
     setErrors({ name: null, targetAmount: null });
   };
 
-  // Form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validateForm()) {
       return;
     }
 
-    // Create new goal
     const newGoal = {
       id: Date.now().toString(36) + Math.random().toString(36).substr(2),
       name: name.trim(),
@@ -130,7 +125,7 @@ function AddGoalModal({ isOpen, onClose, onAddGoal }) {
               onChange={handleAmountChange}
               placeholder="Enter target amount"
               min="0"
-              step="0.01"
+              step="1"
             />
             {errors.targetAmount && (
               <div className="form-error">{errors.targetAmount}</div>
