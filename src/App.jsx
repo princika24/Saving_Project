@@ -1,12 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import AddGoalModal from "./components/AddGoalModal";
 import GoalCard from "./components/GoalCard";
+import AddContributionModal from "./components/AddContributionModal";
 import "./App.css";
 
+const STORAGE_KEY = "savings_planner_goals";
+
 function App() {
-  const [goals, setGoals] = useState([]);
+  const [goals, setGoals] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch (err) {
+      console.error("Failed to load goals from storage", err);
+      return [];
+    }
+  });
+
   const [isAddGoalModalOpen, setIsAddGoalModalOpen] = useState(false);
+  const [isAddContributionModalOpen, setIsAddContributionModalOpen] =
+    useState(false);
+  const [selectedGoalId, setSelectedGoalId] = useState(null);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(goals));
+    } catch (err) {
+      console.error("Failed to save goals to storage", err);
+    }
+  }, [goals]);
 
   const handleOpenAddGoalModal = () => {
     setIsAddGoalModalOpen(true);
@@ -16,10 +39,35 @@ function App() {
     setIsAddGoalModalOpen(false);
   };
 
-  // Adding new goal to list
+  const handleOpenAddContribution = (goalId) => {
+    setSelectedGoalId(goalId);
+    setIsAddContributionModalOpen(true);
+  };
+
+  const handleCloseAddContributionModal = () => {
+    setIsAddContributionModalOpen(false);
+    setSelectedGoalId(null);
+  };
+
   const handleAddGoal = (newGoal) => {
     setGoals((prevGoals) => [...prevGoals, newGoal]);
   };
+
+  const handleAddContribution = (goalId, newContribution) => {
+    setGoals((prevGoals) =>
+      prevGoals.map((goal) => {
+        if (goal.id === goalId) {
+          return {
+            ...goal,
+            contributions: [...(goal.contributions || []), newContribution],
+          };
+        }
+        return goal;
+      })
+    );
+  };
+
+  const selectedGoal = goals.find((g) => g.id === selectedGoalId);
 
   return (
     <div className="app">
@@ -36,15 +84,29 @@ function App() {
             {goals.length === 0 ? (
               <p>No goals yet. Add your first goal.</p>
             ) : (
-              goals.map((goal) => <GoalCard key={goal.id} goal={goal} />)
+              goals.map((goal) => (
+                <GoalCard
+                  key={goal.id}
+                  goal={goal}
+                  onAddContribution={handleOpenAddContribution}
+                />
+              ))
             )}
           </div>
         </section>
       </main>
+
       <AddGoalModal
         isOpen={isAddGoalModalOpen}
         onClose={handleCloseAddGoalModal}
         onAddGoal={handleAddGoal}
+      />
+
+      <AddContributionModal
+        isOpen={isAddContributionModalOpen}
+        onClose={handleCloseAddContributionModal}
+        onAddContribution={handleAddContribution}
+        goal={selectedGoal}
       />
     </div>
   );
