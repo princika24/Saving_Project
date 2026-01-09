@@ -1,5 +1,8 @@
 # Saving_Project
 
+🔗 Live Demo:
+https://saving-planner.netlify.app/
+
 A responsive Savings & Goals Planner built with React + Vite that helps users:
 
 - Create financial goals in INR or USD
@@ -49,14 +52,34 @@ A responsive Savings & Goals Planner built with React + Vite that helps users:
 ⚙️ Setup Instructions
 
 1. Clone the repository
+
    git clone https://github.com/princika24/Saving_Project.git
 
    cd Saving_Project
 
 2. Install dependencies
+
    npm install
 
 3. Create .env file in thhe root of the project
+
    VITE_EXCHANGE_RATE_API_KEY=your_api_key_here
+
 4. Start the server
+
    npm run dev
+
+✨ Website Screenshot
+![alt text](Saving_Planner.png)
+
+✨ Data Persistence
+
+- All goals and contributions are stored in:
+
+  localStorage -> "savings_planner_goals"
+
+- Exchange rate is cached with timestamp.
+
+  - It works even after refresh
+
+  - It works even if API fails (uses cached rate)
