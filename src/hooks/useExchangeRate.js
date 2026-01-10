@@ -1,3 +1,4 @@
+// Custom hook to fetch, cache and provide exchange rate
 import { useState, useEffect, useCallback } from "react";
 
 const CACHE_KEY = "exchange_rate_cache";

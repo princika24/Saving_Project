@@ -1,3 +1,4 @@
+// Modal component for creating a new savings goal
 import { useState } from "react";
 import { validateGoalName, validateTargetAmount } from "../utils";
 import "./AddGoalModal.css";

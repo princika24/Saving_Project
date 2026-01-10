@@ -83,3 +83,19 @@ A responsive Savings & Goals Planner built with React + Vite that helps users:
   - It works even after refresh
 
   - It works even if API fails (uses cached rate)
+
+✨ Running Tests
+
+This project uses Vitest for unit testing.
+
+- Run test in watch mode
+
+  npm run test
+
+  This will :
+
+  - Start the test runner
+
+  - Automatically re-run tests when file changes
+
+  Press q to stop

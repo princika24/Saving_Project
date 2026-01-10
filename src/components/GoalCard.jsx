@@ -1,3 +1,4 @@
+// Displays goal card with progress, amount
 import { formatCurrency } from "../utils";
 import useExchangeRate from "../hooks/useExchangeRate";
 import "./GoalCard.css";

@@ -1,3 +1,4 @@
+// Shows a combined financial summary across all goals
 import useExchangeRate from "../hooks/useExchangeRate";
 import { formatCurrency } from "../utils";
 

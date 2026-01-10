@@ -1,3 +1,4 @@
+// Modal component used to add a new contribution
 import { useState, useEffect } from "react";
 import {
   validateContributionAmount,
